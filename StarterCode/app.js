@@ -34,7 +34,7 @@ d3.csv("data.csv", function(error, JData) {
     // Parse Data/Cast as numbers
     JData.forEach(function(data) {
       data.poverty = +data.poverty;
-      data.smokes = +data.smokes;
+      data.healthcare = +data.healthcare;
       data.abbr = data.abbr;
     });
 
@@ -44,7 +44,7 @@ d3.csv("data.csv", function(error, JData) {
       .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-      .domain([0, d3.max(JData, d => d.smokes)])
+      .domain([0, d3.max(JData, d => d.healthcare)])
       .range([height, 0]);
 
     // Create axis functions
@@ -65,24 +65,24 @@ d3.csv("data.csv", function(error, JData) {
     .enter()
     .append("circle")
     .attr("cx", d => xLinearScale(d.poverty))
-    .attr("cy", d => yLinearScale(d.smokes))
+    .attr("cy", d => yLinearScale(d.healthcare))
     .attr("r", "15")
-    .attr("fill", "pink")
+    .attr("fill", "blue")
     .attr("opacity", ".5");
 
-    //Initialize tool tip
+    // Initialize tool tip
     var toolTip = d3.tip()
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return (`${d.abbr}<br>In Poverty (%): ${d.poverty}<br>Smokers (%): ${d.smokes}`);
+        return (`${d.abbr}<br>In Poverty (%): ${d.poverty}<br>Lacks Helathcare (%): ${d.healthcare}`);
       });
 
-    // Create tooltip in the chart
+      // Create tooltip in the chart
     chartGroup.call(toolTip);
 
     // Create event listeners to display and hide the tooltip
-    circlesGroup.on("click", function(data) {
+    circlesGroup.on("mouseover", function(data) {
       toolTip.show(data, this);
     })
       // onmouseout event
@@ -102,7 +102,7 @@ d3.csv("data.csv", function(error, JData) {
     chartGroup.append("text")
       .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
       .attr("class", "axisText")
-      .text("Smokers (%)");
+      .text("In Poverty (%)");
   });
 
 
